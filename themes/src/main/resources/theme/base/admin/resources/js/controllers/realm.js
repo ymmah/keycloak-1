@@ -2806,12 +2806,13 @@ module.controller('RealmImportCtrl', function($scope, realm, $route,
 module.controller('RealmExportCtrl', function($scope, realm, $http,
                                               $httpParamSerializer, Notifications, Dialog) {
     $scope.realm = realm;
+    $scope.exportUsers = false;
     $scope.exportGroupsAndRoles = false;
     $scope.exportClients = false;
     $scope.exportCredentials = false;
 
     $scope.export = function() {
-        if ($scope.exportGroupsAndRoles || $scope.exportClients || $scope.exportCredentials) {
+        if ($scope.exportUsers || $scope.exportGroupsAndRoles || $scope.exportClients || $scope.exportCredentials) {
             Dialog.confirm('Export', 'This operation may make server unresponsive for a while.\n\nAre you sure you want to proceed?', download);
         } else {
             download();
@@ -2821,6 +2822,9 @@ module.controller('RealmExportCtrl', function($scope, realm, $http,
     function download() {
         var exportUrl = authUrl + '/admin/realms/' + realm.realm + '/partial-export';
         var params = {};
+        if ($scope.exportUsers) {
+            params['exportUsers'] = true;
+        }
         if ($scope.exportGroupsAndRoles) {
             params['exportGroupsAndRoles'] = true;
         }
